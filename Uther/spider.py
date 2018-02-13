@@ -1,5 +1,7 @@
+# coding=utf-8
 import urllib.request
 import random
+import Uther.proxy
 
 
 # 随机获取文件头
@@ -66,8 +68,7 @@ def get_page_proxy(url, proxy=''):
 
     if len(proxy) == 0:
         pass
-        # proxy = getProxy()
-        #TODO
+        proxy = Uther.proxy.g_proxy.get_proxy()
 
     proxies = {'http': proxy}
     proxy_support = urllib.request.ProxyHandler(proxies)

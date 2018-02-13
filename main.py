@@ -1,2 +1,9 @@
+import Uther.spider as spider
+import time
+
 if __name__ == '__main__':
-    print('start')
+    url = 'https://book.douban.com/tag/?view=type&icn=index-sorttags-all'
+    page = spider.get_page(url)
+    time.sleep(5)
+    page = spider.get_page(url)
+

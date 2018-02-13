@@ -3,8 +3,10 @@ import urllib.request
 import random
 import Uther.proxy
 import time
+import Uther.url_file
 
 __sleep_time__ = 3
+
 
 # 随机获取文件头
 def get_user_agent():
@@ -85,7 +87,7 @@ def get_page_proxy(url, proxy=''):
 
 
 # 获取页面
-def get_page(url, method='proxy'):
+def __get_page__(url, method='proxy'):
     page = ''
     if method == 'local':
         page = get_page_local(url)
@@ -93,4 +95,18 @@ def get_page(url, method='proxy'):
     elif method == 'proxy':
         page = get_page_proxy(url)
         time.sleep(__sleep_time__)
+    return page
+
+
+# 使用缓存获取文件
+def get_page(url, method='proxy', cache=True):
+    if cache:
+        if not Uther.url_file.exist_cache(url):
+            page = __get_page__(url, method)
+            if len(page) != 0:
+                Uther.url_file.save_cache(url, page)
+        else:
+            page = Uther.url_file.load_cache(url)
+    else:
+        page = __get_page__(url, method)
     return page

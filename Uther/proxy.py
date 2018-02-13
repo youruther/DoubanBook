@@ -1,3 +1,4 @@
+# coding=utf-8
 import sqlite3
 import os
 
@@ -7,7 +8,7 @@ class Proxy(object):
     cur = None
 
     def __init__(self):
-        proxy_file = "..\\proxy.sqlite"
+        proxy_file = ".\\proxy.sqlite"
         if not os.path.isfile(proxy_file):
             print(proxy_file, '不存在')
             raise AssertionError

@@ -2,7 +2,9 @@
 import urllib.request
 import random
 import Uther.proxy
+import time
 
+__sleep_time__ = 3
 
 # 随机获取文件头
 def get_user_agent():
@@ -67,7 +69,6 @@ def get_page_proxy(url, proxy=''):
     }
 
     if len(proxy) == 0:
-        pass
         proxy = Uther.proxy.g_proxy.get_proxy()
 
     proxies = {'http': proxy}
@@ -85,9 +86,11 @@ def get_page_proxy(url, proxy=''):
 
 # 获取页面
 def get_page(url, method='proxy'):
+    page = ''
     if method == 'local':
-        return get_page_local(url)
+        page = get_page_local(url)
+        time.sleep(__sleep_time__)
     elif method == 'proxy':
-        return get_page_proxy(url)
-    else:
-        return ''
+        page = get_page_proxy(url)
+        time.sleep(__sleep_time__)
+    return page

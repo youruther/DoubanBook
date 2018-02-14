@@ -18,7 +18,7 @@ def get_tags_from_main_page(m_page):
     m_tags = []
     for m_tag in soup.find_all('a', {'class': 'tag-title-wrapper'}):
         p_text = m_tag.text.replace('·', '').strip()
-        if __DEBUG__ and p_text != '科技':
+        if __DEBUG__ and p_text != '文化':
             continue
 
         c_text = m_tag.next_sibling.next_sibling.text
@@ -27,9 +27,50 @@ def get_tags_from_main_page(m_page):
 
         for detail in detail_list:
             text = detail[0].strip('\n')
-            num = int(detail[1])
-            m_tags.append([text, num])
+            m_tags.append(text)
     return m_tags
+
+
+def get_page_from_sub_page(m_page):
+    soup = BeautifulSoup(m_page, "lxml")
+    m_tag = soup.find('div', {'class': 'paginator'})
+    m_text = m_tag.contents[-4].text
+
+    m_count = int(m_text)
+    if m_count > 50:
+        m_count = 50
+
+    return m_count
+
+
+def get_book_from_sub_page(m_page):
+    soup = BeautifulSoup(m_page, "lxml")
+
+    m_book = []
+    m_tags = soup.find_all('div', {'class': 'info'})
+    for m_tag in m_tags:
+        print(m_tag.text)
+
+        title = m_tag.contents[1].contents[1].attrs['title']
+        url = m_tag.contents[1].contents[1].attrs['href']
+        if len(m_tag.contents[1].contents[1].contents) > 1:
+            sub_title = m_tag.contents[1].contents[1].contents[1].text
+        else:
+            sub_title = ''
+
+        info = m_tag.contents[3].text.replace('\n', '').strip()
+
+        if len(m_tag.contents[5]) > 5:
+            score = m_tag.contents[5].contents[3].text
+            people = m_tag.contents[5].contents[5].text.replace('\n', '').strip()
+        else:
+            score = '?'
+            people = '?'
+
+        introduction = m_tag.contents[7].text
+        m_book.append([title, sub_title, url, info, score, introduction])
+
+    return m_book
 
 
 def tag_page_url(m_tag=None, m_page_count=1, m_type='S'):
@@ -52,10 +93,18 @@ if __name__ == '__main__':
 
     n_tags = []
     for tag in tags:
-        page_count = int(tag[1]) // 20 + 1
-        if page_count > 50:
-            page_count = 50
+        sub_url = tag_page_url(m_tag=tag)
+        page = spider.get_page(sub_url)
+        count = get_page_from_sub_page(page)
+        n_tags.append([tag, count])
+        for i in range(2, count + 1):
+            sub_url = tag_page_url(m_tag=tag, m_page_count=i)
+            page = spider.get_page(sub_url)
 
-        for i in range(1, page_count + 1):
+    books = []
+    for tag in n_tags:
+        for i in range(1, tag[1] + 1):
             sub_url = tag_page_url(m_tag=tag[0], m_page_count=i)
             page = spider.get_page(sub_url)
+            books.extend(get_book_from_sub_page(page))
+

@@ -103,10 +103,13 @@ def get_page(url, method='proxy', cache=True):
     if cache:
         if not Uther.url_file.exist_cache(url):
             page = __get_page__(url, method)
+            print('远程获取' + url)
             if len(page) != 0:
                 Uther.url_file.save_cache(url, page)
         else:
             page = Uther.url_file.load_cache(url)
+            print('本地获取' + url)
     else:
         page = __get_page__(url, method)
+        print('远程获取' + url)
     return page

@@ -2,8 +2,11 @@ import Uther.spider as spider
 from bs4 import BeautifulSoup
 import urllib.parse
 import re
+import sqlite3
+from Book import Book
 
 __DEBUG__ = True
+__MAX_PAGE__ = 40
 
 
 def find_pattern(pattern, text):
@@ -37,8 +40,8 @@ def get_page_from_sub_page(m_page):
     m_text = m_tag.contents[-4].text
 
     m_count = int(m_text)
-    if m_count > 50:
-        m_count = 50
+    if m_count > __MAX_PAGE__:
+        m_count = __MAX_PAGE__
 
     return m_count
 
@@ -46,31 +49,14 @@ def get_page_from_sub_page(m_page):
 def get_book_from_sub_page(m_page):
     soup = BeautifulSoup(m_page, "lxml")
 
-    m_book = []
+    m_books = []
     m_tags = soup.find_all('div', {'class': 'info'})
+
     for m_tag in m_tags:
-        print(m_tag.text)
+        m_book = Book()
+        m_books.append(m_book.read_from_bs4_tag(m_tag))
 
-        title = m_tag.contents[1].contents[1].attrs['title']
-        url = m_tag.contents[1].contents[1].attrs['href']
-        if len(m_tag.contents[1].contents[1].contents) > 1:
-            sub_title = m_tag.contents[1].contents[1].contents[1].text
-        else:
-            sub_title = ''
-
-        info = m_tag.contents[3].text.replace('\n', '').strip()
-
-        if len(m_tag.contents[5]) > 5:
-            score = m_tag.contents[5].contents[3].text
-            people = m_tag.contents[5].contents[5].text.replace('\n', '').strip()
-        else:
-            score = '?'
-            people = '?'
-
-        introduction = m_tag.contents[7].text
-        m_book.append([title, sub_title, url, info, score, introduction])
-
-    return m_book
+    return m_books
 
 
 def tag_page_url(m_tag=None, m_page_count=1, m_type='S'):
@@ -108,3 +94,14 @@ if __name__ == '__main__':
             page = spider.get_page(sub_url)
             books.extend(get_book_from_sub_page(page))
 
+    proxy_file = ".\\douban.sqlite"
+
+    cx = sqlite3.connect(proxy_file)
+    cur = cx.cursor()
+
+    for book in books:
+        pass
+
+    cx.commit()
+    cur.close()
+    cx.close()

@@ -21,8 +21,8 @@ def get_tags_from_main_page(m_page):
     m_tags = []
     for m_tag in soup.find_all('a', {'class': 'tag-title-wrapper'}):
         p_text = m_tag.text.replace('·', '').strip()
-        if __DEBUG__ and p_text != '文化':
-            continue
+        # if __DEBUG__ and p_text != '经管':
+        #     continue
 
         c_text = m_tag.next_sibling.next_sibling.text
         pattern = r'\n(.+?)\((.+?)\)\n'
@@ -100,7 +100,16 @@ if __name__ == '__main__':
     cur = cx.cursor()
 
     for book in books:
-        pass
+        cur.execute('''SELECT * FROM T_book t WHERE t.id = ?''', (book.id,))
+        row = cur.fetchone()
+        if None is not row:
+            print(book.id, ' ', book.full_title, '已存在')
+            continue
+
+        sql = '''INSERT INTO T_book (id, title, full_title,url, info, score,people, introduction) VALUES (?,?,?,?,?,?,?,?)'''
+        cur.execute(sql, book.get_db_parameters())
+        cx.commit()
+        print(book.id, ' ', book.full_title, '纪录完成')
 
     cx.commit()
     cur.close()

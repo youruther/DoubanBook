@@ -1,8 +1,8 @@
 class Book(object):
+    id = ''
     title = ''
     sub_title = ''
     full_title = ''
-    id = ''
     url = ''
     info = ''
     score = 0.0
@@ -11,6 +11,11 @@ class Book(object):
 
     def __init__(self):
         pass
+
+    def get_db_parameters(self):
+        return (self.id, self.title, self.full_title,
+                self.url, self.info, self.score,
+                self.people, self.introduction)
 
     def read_from_bs4_tag(self, m_tag):
         # print(m_tag.text)
@@ -41,5 +46,5 @@ class Book(object):
             pos = temp.index('人')
             self.people = int(temp[1:pos])
 
-        self.introduction = m_tag.contents[7].text
+        self.introduction = m_tag.contents[7].text.replace('\n', ' ')
         return self

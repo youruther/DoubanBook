@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="douban.sqlite">
+  <database-model serializer="dbm" rdbms="SQLITE" format-version="4.7">
+    <root id="1"/>
+    <schema id="2" parent="1" name="main">
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <collation id="3" parent="1" name="BINARY"/>
+    <collation id="4" parent="1" name="NOCASE"/>
+    <collation id="5" parent="1" name="RTRIM"/>
+    <table id="6" parent="2" name="T_book"/>
+    <table id="7" parent="2" name="sqlite_master">
+      <System>1</System>
+    </table>
+    <column id="8" parent="6" name="id">
+      <Position>1</Position>
+      <DataType>VARCHAR(10)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="9" parent="6" name="title">
+      <Position>2</Position>
+      <DataType>VARCHAR(100)|0</DataType>
+    </column>
+    <column id="10" parent="6" name="full_title">
+      <Position>3</Position>
+      <DataType>VARCHAR(150)|0</DataType>
+    </column>
+    <column id="11" parent="6" name="url">
+      <Position>4</Position>
+      <DataType>VARCHAR(100)|0</DataType>
+    </column>
+    <column id="12" parent="6" name="info">
+      <Position>5</Position>
+      <DataType>VARCHAR(200)|0</DataType>
+    </column>
+    <column id="13" parent="6" name="score">
+      <Position>6</Position>
+      <DataType>FLOAT(3,1)|0</DataType>
+    </column>
+    <column id="14" parent="6" name="people">
+      <Position>7</Position>
+      <DataType>INT|0</DataType>
+    </column>
+    <column id="15" parent="6" name="introduction">
+      <Position>8</Position>
+      <DataType>VARCHAR(500)|0</DataType>
+    </column>
+    <index id="16" parent="6" name="sqlite_autoindex_T_book_1">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <key id="17" parent="6">
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>sqlite_autoindex_T_book_1</UnderlyingIndexName>
+    </key>
+    <column id="18" parent="7" name="type">
+      <Position>1</Position>
+      <DataType>text|0</DataType>
+    </column>
+    <column id="19" parent="7" name="name">
+      <Position>2</Position>
+      <DataType>text|0</DataType>
+    </column>
+    <column id="20" parent="7" name="tbl_name">
+      <Position>3</Position>
+      <DataType>text|0</DataType>
+    </column>
+    <column id="21" parent="7" name="rootpage">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+    </column>
+    <column id="22" parent="7" name="sql">
+      <Position>5</Position>
+      <DataType>text|0</DataType>
+    </column>
+  </database-model>
+</dataSource>
